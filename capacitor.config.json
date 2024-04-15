@@ -1,0 +1,11 @@
+{
+  "appId": "com.golfapp.app",
+  "appName": "golf_app",
+  "bundledWebRuntime": false,
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
