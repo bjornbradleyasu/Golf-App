@@ -1,32 +1,74 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <title>Awesome Capacitor App</title>
-    <meta
-      name="viewport"
-      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="msapplication-tap-highlight" content="no" />
 
-    <script
-      type="module"
-      src="https://unpkg.com/@ionic/pwa-elements@latest/dist/ionicpwaelements/ionicpwaelements.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/@ionic/pwa-elements@latest/dist/ionicpwaelements/ionicpwaelements.js"
-    ></script>
+    <script type="module" src="https://unpkg.com/@ionic/pwa-elements@latest/dist/ionicpwaelements/ionicpwaelements.esm.js"></script>
+    <script nomodule src="https://unpkg.com/@ionic/pwa-elements@latest/dist/ionicpwaelements/ionicpwaelements.js"></script>
 
     <link rel="icon" type="image/x-icon" href="./assets/icon/favicon.ico" />
     <link rel="manifest" href="./manifest.json" />
     <link rel="stylesheet" href="./css/style.css" />
     <meta name="theme-color" content="#31d53d" />
-  </head>
-  <body>
-    <capacitor-welcome></capacitor-welcome>
+</head>
+<body>
+    <div id="page1" class="page active">
+        <h1>Welcome to Your Awesome App</h1>
+        <p>This is the homepage of your application.</p>
+    </div>
+    <div id="page2" class="page">
+      <div id="gameSelection">
+          <h1>Game Selection</h1>
+          <p>Choose a game to play:</p>
+          <div class="game-buttons">
+              <button class="game-button" onclick="showGameDetails(1)">Game 1</button>
+              <button class="game-button" onclick="showGameDetails(2)">Game 2</button>
+              <button class="game-button" onclick="showGameDetails(3)">Game 3</button>
+              <button class="game-button" onclick="showGameDetails(4)">Game 4</button>
+              <button class="game-button" onclick="showGameDetails(5)">Game 5</button>
+          </div>
+      </div>
+      <div id="gameDetails" class="game-details" style="display: none;">
+          <button onclick="hideGameDetails()">Back to Games</button>
+          <div id="detailsContent">
+              <!-- Details injected by JavaScript -->
+          </div>
+      </div>
+  </div>
+  </div>
+    <div id="page3" class="page">
+        <h1>Page 3</h1>
+        <p>This is the third page.</p>
+    </div>
+    <div id="page4" class="page">
+      <h1>Select Course</h1>
+      <input type="text" id="courseSearchInput" onkeyup="filterCourses()" placeholder="Search for courses..." autocomplete="off">
+      <div id="courseList" class="course-list">
+          <div class="course-item">Course 1</div>
+          <div class="course-item">Course 2</div>
+          <div class="course-item">Course 3</div>
+          <div class="course-item">Course 4</div>
+          <div class="course-item">Course 5</div>
+          <!-- Additional courses can be added here -->
+      </div>
+  </div>
+    <div id="page5" class="page">
+        <h1>Page 5</h1>
+        <p>This is the fifth and final page.</p>
+    </div>
 
-    <script src="./js/capacitor-welcome.js" type="module"></script>
-  </body>
+    <div class="navigation">
+      <button onclick="switchPage(2)">View Game</button>
+      <button onclick="switchPage(3)">View Score</button>
+      <button onclick="switchPage(1)">Home</button>
+      <button onclick="switchPage(4)">Select Course</button>
+      <button onclick="switchPage(5)">Profile</button>
+  </div>
+
+    <script src="./js/navigation.js"></script>
+</body>
 </html>
