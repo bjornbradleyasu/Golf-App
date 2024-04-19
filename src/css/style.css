@@ -18,10 +18,10 @@ body {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: #31d53d; /* Use the theme color for consistency */
-  box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* subtle shadow for a lift effect */
+  background: #31d53d;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
   display: flex;
-  justify-content: space-around; /* This will space your buttons evenly */
+  justify-content: space-around;
 }
 
 .navigation button {
@@ -35,7 +35,7 @@ body {
 }
 
 .navigation button:hover, .navigation button:focus {
-  background: #e9ffe9; /* Light green background on hover/focus */
+  background: #e9ffe9;
   color: #31d53d;
   outline: none;
 }
@@ -48,7 +48,7 @@ body {
 }
 
 .game-button {
-  background-color: #4CAF50; /* Green background */
+  background-color: #4CAF50;
   border: none;
   color: white;
   padding: 20px 40px;
@@ -58,16 +58,16 @@ body {
   font-size: 20px;
   margin: 10px;
   cursor: pointer;
-  width: 80%; /* Set the width to 80% of its container */
+  width: 80%;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .game-button:hover {
-  background-color: #45a049; /* Darker shade of green */
+  background-color: #45a049;
 }
 
 .game-details {
-  display: none; /* Hidden by default */
+  display: none;
   padding: 20px;
   text-align: center;
 }
@@ -77,17 +77,6 @@ body {
   margin-bottom: 20px;
 }
 
-GPT
-Certainly! Let’s set up a "Select Course" page which will initially include a search bar to filter through course options. This setup will allow users to type in keywords and find courses quickly.
-
-Step 1: Designate a Page for Course Selection
-Assuming we use Page 3 for course selection, we'll start by adding a basic search bar and preparing the structure to display course options that will be filtered based on the search query.
-
-Update HTML for Page 3
-Here’s how you can structure the HTML for Page 3 to include a search bar:
-
-html
-Copy code
 <div id="page3" class="page">
     <h1>Select Course</h1>
     <input type="text" id="courseSearchInput" onkeyup="filterCourses()" placeholder="Search courses..." autocomplete="off">
@@ -100,11 +89,7 @@ Copy code
         <!-- More courses can be added here -->
     </div>
 </div>
-Step 2: Add CSS for the Search Bar and Course Items
-We’ll add some CSS to style the search bar and the course list items:
 
-css
-Copy code
 #courseSearchInput {
     width: 90%;
     padding: 10px;
