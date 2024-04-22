@@ -12,14 +12,19 @@
 
     <link rel="icon" type="image/x-icon" href="./assets/icon/favicon.ico" />
     <link rel="manifest" href="./manifest.json" />
+
     <link rel="stylesheet" href="./css/style.css" />
     <meta name="theme-color" content="#31d53d" />
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPRZ4bppvwEn3IRwa7mABIGOJjZAEVrH0"></script>
     <script src="./js/navigation.js"></script>
 </head>
 <body>
     <div id="page1" class="page active">
-        <h1>Welcome to the Bougie Golf App</h1>
+        <h1>Welcome to the Bogey Golf App</h1>
         <p>Before you begin you game below make sure to select a game as well as a course</p>
+        <button id="startGameButton" class="game-button">Start Game</button>
+          <!-- Content for the start game page goes here -->
+      </div>
     </div>
     <div id="page2" class="page">
       <div id="gameSelection">
@@ -44,19 +49,35 @@
   </div>
   <div id="page3" class="page">
     <h1>Select Course</h1>
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <input type="text" id="courseSearchInput" oninput="filterCourses()" placeholder="Search for courses..." autocomplete="off">
-        <button onclick="clearSearch()">Clear</button>
+    <div style="display: flex; justify-content: center; gap: 10px; padding: 20px;">
+      <input type="text" id="courseSearchInput" oninput="filterCourses()" placeholder="Search for courses..." autocomplete="off">
+      <button id="enterButton">Enter</button> <!-- Enter button moved -->
+      <button onclick="clearSearch()">Clear</button>
     </div>
-    <div id="courseList" class="course-list">
-        <!-- Filtered courses will be displayed here -->
+    <div style="position: relative;">
+      <div id="suggestionsDropdown" class="suggestions-dropdown">
+          <!-- Suggestions will appear here -->
+      </div>
+    </div>  
+    <div id="courseDetails" class="course-details" style="display: none;">
+      <!-- Full details of the selected course will be displayed here -->
     </div>
-  </div>
+    <div id="map" style="height: 500px;"></div> <!-- Map container -->
   </div>
   <div id="page4" class="page">
     <h1>Page 4</h1>
     <p>This is the fourth page.</p>
-</div>
+  </div>
+  <!-- New start game page, initially hidden -->
+  <div id="page5" class="page" style="display: none;">
+  <!-- Content for the new game start page -->
+    <h2>Game Start Page</h2>
+    <p>Welcome to the game start page!</p>
+  <!-- Add more content and functionality as needed -->
+  <!-- Button to go back to the main page (optional) -->
+    <button onclick="switchPage(1)">Back to Home</button>
+  </div>
+
 
     <div class="navigation">
       <button onclick="switchPage(2)">View Game</button>

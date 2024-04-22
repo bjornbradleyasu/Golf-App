@@ -5,6 +5,10 @@ html, body {
 }
 
 .page {
+  background-image: ('../src/golf-background.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: none;
   padding: 20px;
   box-sizing: border-box;
@@ -110,11 +114,38 @@ html, body {
   background-color: #e9e9e9;
 }
 
-/* Ensure the map container is always visible and properly sized */
-#map {
-  height: 400px; /* Adjust height as needed */
-  width: 100%; /* Make sure the map spans the full width */
-  margin-top: 20px; /* Add some space above the map */
+.course-details {
+  padding: 10px;
+  margin-top: 10px;
 }
 
-/* Add your additional styles below */
+
+.suggestion {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0; /* Adjust color as needed */
+}
+
+
+.suggestion:last-child {
+  border-bottom: none;
+}
+
+
+#map {
+  width: 100%;
+  height: 500px;
+  margin-top: 20px;
+}
+

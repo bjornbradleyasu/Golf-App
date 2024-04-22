@@ -7,9 +7,8 @@ function switchPage(pageNum) {
     const activePage = document.getElementById('page' + pageNum);
     activePage.style.display = 'block'; // Show the active page
 
-    // If we're switching to Page 4, initialize the map
-    if (pageNum === 4) {
-        initMap();
+    if (pageNum === 3) {
+        initMap();  // Ensure map is initialized when Page 3 is shown
     }
 }
 
@@ -17,17 +16,22 @@ function startGame(gameId) {
     alert("Starting Game " + gameId);
 }
 
+function showSubPage() {
+    document.getElementById('startGamePage').style.display = 'block';
+    document.getElementById('startGameButton').style.display = 'none';  // Optionally hide the button
+}
+
+// Function to hide the new subpage and show the "Start Game" button again
+function hideSubPage() {
+    document.getElementById('startGamePage').style.display = 'none';
+    document.getElementById('startGameButton').style.display = 'block';  // Show the button again
+}
+
 function showGameDetails(gameId) {
     var gameInfo = {
-        1: "<h2>Classic</h2><p>This is your everyday golf battle. Select below between match and stroke play. Then get to swinging!</p>",
-        2: "<h2>Scramble</h2><p>Pairing up with a buddy to take on another duo? Select your teams below to get started!.</p>",
-        3: "<h2>Best Ball</h2><p>Wanting to play your ball, but to also rely on your better friend? Select your teams below to get started</p>",
-        4: "<h2>Tee Flip</h2><p>Wanting a risky challenge to do with your friends? Select your teams and whether you want to flip the tee yourself or here on the app to get started!</p>",
-        5: "<h2>Wheel of Not Ideal</h2><p>Have you wanted to try the trademarked Good Good Wheel of Not Ideal yourself? While now you can. Enter your clubs here or on the profile page to get started!</p>",
-        6: "<h2>Wolf</h2><p>Wanting a different game to try with your friends while playing your own ball? This is the game for you</p>",
-        // ... Other game details ...
+        1: "<h2>Classic</h2><p>This is your everyday golf battle...</p>",
+        // other game details
     };
-
     document.getElementById('detailsContent').innerHTML = gameInfo[gameId];
     document.getElementById('gameSelection').style.display = 'none';
     document.getElementById('gameDetails').style.display = 'block';
@@ -38,64 +42,101 @@ function hideGameDetails() {
     document.getElementById('gameDetails').style.display = 'none';
 }
 
+let map;
+let courseArray = [];
+let selectedCourse = null;
+
 async function loadCourses() {
     const response = await fetch('Golf Courses-USA.csv');
     const data = await response.text();
-    const courses = data.split('\n').slice(1).map(line => line.split(',')[0]); // Assuming course names are in the first column
-    return courses;
+    const lines = data.split('\n').slice(1); // Skip the header line
+    
+    courseArray = lines.map((line, index) => {
+        const columns = line.match(/(?:^|,)(?:"((?:[^"]|"")*)"|([^",]*))/g);
+        if (!columns || columns.length < 3) {
+            console.error(`Skipping malformed line at index ${index}:`, line);
+            return null;
+        }
+        // Remove the first comma found by the regex match (if present) and trim the quotes
+        const nameWithCityState = columns[2].startsWith(',') ? columns[2].substring(1).replace(/"/g, '').trim() : columns[2].replace(/"/g, '').trim();
+        const latLngMatch = line.match(/^([^,]+),([^,]+)/); // Extract latitude and longitude from the beginning of the line
+        if (!latLngMatch) {
+            console.error('Invalid lat/lng format:', line);
+            return null;
+        }
+        const lat = parseFloat(latLngMatch[2]);
+        const lng = parseFloat(latLngMatch[1]);
+        const details = line.split(',').slice(2).join(',').trim();
+        return { nameWithCityState, lat, lng, details };
+    }).filter(Boolean); // Filter out any null items
 }
 
-let coursesArray = [];
-
-window.onload = async () => {
-    coursesArray = await loadCourses();
-    filterCourses(); // Initial display
-};
 
 function filterCourses() {
     const input = document.getElementById('courseSearchInput').value.toLowerCase();
-    const courseList = document.getElementById('courseList');
-    courseList.innerHTML = ''; // Clear previous results
+    const suggestionsDropdown = document.getElementById('suggestionsDropdown');
+    suggestionsDropdown.innerHTML = '';
 
-    coursesArray.filter(course => course.toLowerCase().includes(input)).forEach(filteredCourse => {
-        const courseElement = document.createElement('div');
-        courseElement.textContent = filteredCourse;
-        courseElement.className = 'course';
-        courseList.appendChild(courseElement);
+    const filteredCourses = courseArray
+        .filter(course => course.nameWithCityState.toLowerCase().includes(input))
+        .slice(0, 10); // Limit the results to 10
+
+    filteredCourses.forEach(course => {
+        const suggestionDiv = document.createElement('div');
+        suggestionDiv.textContent = course.nameWithCityState;
+        suggestionDiv.className = 'suggestion-item';
+        suggestionDiv.onclick = function() {
+            document.getElementById('courseSearchInput').value = course.nameWithCityState;
+            selectedCourse = course; // Store the selected course with the name, city, and state
+            suggestionsDropdown.style.display = 'none';
+        };
+        suggestionsDropdown.appendChild(suggestionDiv);
+    });
+
+    suggestionsDropdown.style.display = filteredCourses.length ? 'block' : 'none';
+}
+
+async function initMap() {
+    const centerOfUSA = { lat: 37.0902, lng: -95.7129 };
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 5,
+        center: centerOfUSA
+    });
+
+    await loadCourses();
+    
+    // Add markers to the map
+    courseArray.forEach(course => {
+        new google.maps.Marker({
+            position: { lat: course.lat, lng: course.lng },
+            map: map,
+            title: course.nameWithCityState
+        });
     });
 }
 
 function clearSearch() {
     document.getElementById('courseSearchInput').value = '';
-    filterCourses();
+    document.getElementById('suggestionsDropdown').style.display = 'none';
+    filterCourses(); // Re-filter courses which should now show no results
 }
 
-let map; // Holds the map instance
-// Ensure this is called once the Google Maps script is loaded and the DOM is ready
-function initMap() {
-    // Delay initialization to ensure DOM is fully ready
-    window.setTimeout(() => {
-        if (!map && document.getElementById('map')) {
-            console.log('Map element found, initializing map...');
-            const center = { lat: 37.0902, lng: -95.7129 }; // Center of the map (USA)
-            map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 4,
-                center: center
-            });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('startGameButton').addEventListener('click', () => switchPage(5));
+    document.getElementById('enterButton').addEventListener('click', function() {
+        if (selectedCourse && map) {
+            const position = new google.maps.LatLng(selectedCourse.lat, selectedCourse.lng);
+            map.setCenter(position);
+            map.setZoom(13);
+    
+            // Display the course details without the latitude and longitude
+            const courseDetailsDiv = document.getElementById('courseDetails');
+            courseDetailsDiv.textContent = selectedCourse.details; // Use 'details' for display
+            courseDetailsDiv.style.display = 'block';
         }
-    }, 1000); // Delay by 1 second
-}
+    });
+});
 
-
-// Modification in the part where the script is added to check if Google Maps script is already loaded
-if (!window.google || !window.google.maps) {
-    console.log('Adding Google Maps script to the page');
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAPRZ4bppvwEn3IRwa7mABIGOJjZAEVrH0&callback=initMap`;
-    script.async = true; // Asynchronously load the script to not block the DOM
-    script.defer = true; // Defer execution until the DOM is fully parsed
-    document.head.appendChild(script);
-} else {
-    console.log('Google Maps script already loaded');
-    initMap(); // If the script is already there, we try to initialize the map directly
-}
+window.onload = initMap; // Initialize the map once all content is loaded
