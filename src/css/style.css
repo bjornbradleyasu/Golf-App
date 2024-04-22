@@ -4,16 +4,60 @@ html, body {
   height: 100%; /* Ensure the body takes full viewport height */
 }
 
+
 .page {
-  background-image: ('../src/golf-background.jpeg');
+  background-image: url('../golf-background.jpeg');
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
-  display: none;
-  padding: 20px;
-  box-sizing: border-box;
-  height: calc(100% - 40px); /* Account for padding */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Space out the main content and the footer */
+  height: 100vh;
   overflow-y: auto; /* Enable scrolling if content overflows */
+}
+
+.main-content {
+  flex: 1; /* Allows the main content to grow and take up available space */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 100px;
+}
+
+#page1 {
+  /* Other styles... */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Aligns children with space between them */
+  align-items: center; /* Centers children horizontally */
+  height: 100vh; /* Takes full viewport height */
+}
+
+.page-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 50px; /* Adjust as needed */
+  text-align: center;
+}
+
+
+/* Center the golf icon */
+#golfIcon {
+  width: 250px; /* Increase the width as desired */
+  height: auto; /* Maintain the aspect ratio */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+/* Specific styles for the "Start Game" button */
+#startGameButton {
+  margin-bottom: 50px; /* Adjust as needed for spacing from the bottom */
+  border-radius: 15px;
 }
 
 .active {
@@ -47,6 +91,7 @@ html, body {
 }
 
 .game-buttons {
+  border-radius: 15px;
   margin-top: 20px;
   display: flex;
   flex-direction: column;

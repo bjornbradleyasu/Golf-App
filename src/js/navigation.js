@@ -1,15 +1,44 @@
 function switchPage(pageNum) {
+    // Hide all pages
     const pages = document.querySelectorAll('.page');
     pages.forEach(page => {
-        page.style.display = 'none'; // Hide all pages
+        page.style.display = 'none';
+        page.classList.remove('active'); // Remove active class from all pages
     });
 
+    // Show the requested page
     const activePage = document.getElementById('page' + pageNum);
-    activePage.style.display = 'block'; // Show the active page
+    activePage.style.display = 'block';
+    activePage.classList.add('active'); // Add active class to the requested page
 
-    if (pageNum === 3) {
-        initMap();  // Ensure map is initialized when Page 3 is shown
+    // Reinitialize the state of Page 1 each time we navigate back to it
+    if (pageNum === 1) {
+        setupPage1();
     }
+
+    // Initialize the map when Page 3 is shown
+    if (pageNum === 3) {
+        initMap();
+    }
+}
+
+// Call this function when you navigate to page 1 to reset its state
+function setupPage1() {
+    const page1 = document.getElementById('page1');
+    page1.style.justifyContent = ''; // Reset any justify-content changes
+    page1.style.alignItems = ''; // Reset any align-items changes
+
+    // Reset styles for 'Start Game' button and 'Golf Icon' if needed
+    const startButton = document.getElementById('startGameButton');
+    const golfIcon = document.getElementById('golfIcon');
+
+    // Set or reset any styles applied directly via JS
+    startButton.style = '';
+    golfIcon.style = '';
+
+    // Alternatively, if you have specific classes that apply these styles, add them back
+    // startButton.classList.add('game-button');
+    // golfIcon.classList.add('golf-icon-class'); // Replace with actual class name if exists
 }
 
 function startGame(gameId) {
