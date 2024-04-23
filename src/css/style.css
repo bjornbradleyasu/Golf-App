@@ -4,6 +4,31 @@ html, body {
   height: 100%; /* Ensure the body takes full viewport height */
 }
 
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+  /* Add other styles if necessary */
+}
+
+.header-text-container {
+  background-color: rgba(237, 229, 187); /* White background with some transparency for readability */
+  padding: 10px 20px;
+  border-radius: 20px;
+  display: inline-block; /* This makes the background only as wide as the text */
+  margin: 10 auto; /* Override default margins if necessary */
+  text-align: center;
+}
+
+.header-container {
+  text-align: center; /* This will center the text containers in the parent container */
+}
+
+.text-container {
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+  padding: 15px; /* Spacing around the text */
+  border-radius: 5px; /* Slightly rounded corners for the container */
+  margin-bottom: 15px; /* Add some margin to separate text containers if stacked */
+}
+
 
 .page {
   background-image: url('../golf-background.jpeg');
@@ -56,8 +81,9 @@ html, body {
 
 /* Specific styles for the "Start Game" button */
 #startGameButton {
-  margin-bottom: 50px; /* Adjust as needed for spacing from the bottom */
-  border-radius: 15px;
+  margin-bottom: 50px; 
+  border-radius: 20px;
+  /* Other styles... */
 }
 
 .active {
@@ -128,6 +154,25 @@ html, body {
   margin-bottom: 20px;
 }
 
+.game-name-display {
+  /* Add your styling here */
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc; /* Example styling */
+  text-align: center;
+}
+
+.selected-game-name {
+  font-size: 18px;
+  color: #444;
+  margin: 10px 0;
+  padding: 5px;
+  text-align: center;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+
 #courseSearchInput {
   width: 90%;
   padding: 10px;
@@ -194,3 +239,66 @@ html, body {
   margin-top: 20px;
 }
 
+.selected-course {
+  border: 1px solid #ccc; /* Example border */
+  border-radius: 4px; /* Softer corners */
+  padding: 10px; /* Spacing inside the box */
+  margin: 20px; /* Spacing outside the box */
+  min-height: 50px; /* Minimum height */
+  background-color: #f9f9f9; /* Light background for visibility */
+  color: #333; /* Text color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Add more styles as needed */
+}
+
+.toggle-switch {
+  position: fixed;  /* Fixed positioning at the bottom of the page */
+  bottom: 80px;     /* 20px from the bottom */
+  left: 50%;        /* Centered horizontally */
+  transform: translateX(-50%);
+  display: inline-block;
+  width: 150px;  /* Increased width */
+  height: 50px; /* Increased height */
+  z-index: 10;  /* Ensure it's above other content */
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-label {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc; /* Light grey background, iOS style */
+  transition: 0.4s;
+  border-radius: 50px; /* Rounded ends */
+}
+
+.toggle-label:before {
+  position: absolute;
+  content: "";
+  height: 42px;  /* Circle slider height, increased */
+  width: 42px;   /* Circle slider width, increased */
+  left: 4px;
+  bottom: 4px;
+  background-color: white; /* White circle slider */
+  transition: 0.4s;
+  border-radius: 50%; /* Circle shape */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Shadow for the slider */
+}
+
+.toggle-input:checked + .toggle-label {
+  background-color: #4CD964; /* iOS green for 'on' state */
+}
+
+.toggle-input:checked + .toggle-label:before {
+  transform: translateX(100px); /* Move the slider to the right when checked */
+}

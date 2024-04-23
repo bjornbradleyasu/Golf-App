@@ -20,7 +20,9 @@
 </head>
 <body>
     <div id="page1" class="page active">
-        <h1>Welcome to the Bogey Golf App</h1>
+      <div class="header-container">
+        <h1 class="header-text-container">Welcome to the Bogey Golf App</h1>
+      </div>
         <p>Before you begin...</p>
         <img src="golf-icon.png" id="golfIcon" alt="Golf Icon" />
         <div class="page-footer">
@@ -30,27 +32,31 @@
     </div>
     <div id="page2" class="page">
       <div id="gameSelection">
-          <h1>Game Selection</h1>
+        <div class="header-container">
+          <h1 class="header-text-container">Game Selection</h1>
+        </div>
           <p>Choose a game to play:</p>
           <div class="game-buttons">
-              <button class="game-button" onclick="showGameDetails(1)">Classic</button>
-              <button class="game-button" onclick="showGameDetails(2)">Scramble</button>
-              <button class="game-button" onclick="showGameDetails(3)">Best Ball</button>
-              <button class="game-button" onclick="showGameDetails(4)">Tee Flip</button>
-              <button class="game-button" onclick="showGameDetails(5)">Wheel of Not Ideal</button>
-              <button class="game-button" onclick="showGameDetails(6)">Wolf</button>
+            <button class="game-button" data-game-id="1" onclick="showGameDetails(1)">Classic</button>
+            <button class="game-button" data-game-id="2" onclick="showGameDetails(2)">Scramble</button>
+            <button class="game-button" data-game-id="3" onclick="showGameDetails(3)">Best Ball</button>
+            <button class="game-button" data-game-id="4" onclick="showGameDetails(4)">Tee Flip</button>
+            <button class="game-button" data-game-id="5" onclick="showGameDetails(5)">Wheel of Not Ideal</button>
+            <button class="game-button" data-game-id="6" onclick="showGameDetails(6)">Wolf</button>
+        </div>
+        
           </div>
-      </div>
-      <div id="gameDetails" class="game-details" style="display: none;">
-          <button onclick="hideGameDetails()">Back to Games</button>
-          <div id="detailsContent">
-              <!-- Details injected by JavaScript -->
-          </div>
-      </div>
-  </div>
-  </div>
+          <div id="gameDetails" class="game-details" style="display: none;">
+              <button onclick="hideGameDetails()">Back to Games</button>
+              <div id="detailsContent">
+                  <!-- Details injected by JavaScript -->
+              </div>
+        </div>
+    </div>
   <div id="page3" class="page">
-    <h1>Select Course</h1>
+    <div class="header-container">
+      <h1 class="header-text-container">Select Course</h1>
+    </div>
     <div style="display: flex; justify-content: center; gap: 10px; padding: 20px;">
       <input type="text" id="courseSearchInput" oninput="filterCourses()" placeholder="Search for courses..." autocomplete="off">
       <button id="enterButton">Enter</button> <!-- Enter button moved -->
@@ -67,19 +73,29 @@
     <div id="map" style="height: 500px;"></div> <!-- Map container -->
   </div>
   <div id="page4" class="page">
-    <h1>Page 4</h1>
+    <div class="header-container">
+      <h1 class="header-text-container">Profile</h1>
+    </div>
     <p>This is the fourth page.</p>
   </div>
   <!-- New start game page, initially hidden -->
-  <div id="page5" class="page" style="display: none;">
-  <!-- Content for the new game start page -->
-    <h2>Game Start Page</h2>
-    <p>Welcome to the game start page!</p>
-  <!-- Add more content and functionality as needed -->
-  <!-- Button to go back to the main page (optional) -->
+  <div id="page5" class="page">
+    <div class="header-container">
+      <h2 class="header-text-container">Game Start Page</h2>
+    </div>
+    <div class="text-container" id="selectedGameName"> <!-- Add the text-container class here -->
+      <!-- Game name will be dynamically injected here -->
+    </div>
+    <div class="text-container" id="selectedCourseDetails"> <!-- Add the text-container class here -->
+      <!-- Course details will be dynamically injected here -->
+    </div>
     <button onclick="switchPage(1)">Back to Home</button>
-  </div>
-
+    <canvas id="snapshotCanvas" hidden></canvas>
+    <button id="openCameraButton">Open Camera</button>
+    <video id="cameraStream" width="640" height="480" autoplay></video>
+    <button id="takePictureButton">Take Picture</button>
+    <canvas id="snapshotCanvas" width="640" height="480"></canvas>
+</div>
 
     <div class="navigation">
       <button onclick="switchPage(2)">View Game</button>
