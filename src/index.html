@@ -47,7 +47,7 @@
         
           </div>
           <div id="gameDetails" class="game-details" style="display: none;">
-              <button onclick="hideGameDetails()">Back to Games</button>
+            <img src="back_icon.png" alt="Back" class="back-button" onclick="switchPage(2)" />
               <div id="detailsContent">
                   <!-- Details injected by JavaScript -->
               </div>
@@ -80,6 +80,7 @@
   </div>
   <!-- New start game page, initially hidden -->
   <div id="page5" class="page">
+    <img src="back_icon.png" alt="Back" class="back-button" onclick="switchPage(1)" />
     <div class="header-container">
       <h2 class="header-text-container">Game Start Page</h2>
     </div>
@@ -89,9 +90,13 @@
     <div class="text-container" id="selectedCourseDetails"> <!-- Add the text-container class here -->
       <!-- Course details will be dynamically injected here -->
     </div>
-    <button onclick="switchPage(1)">Back to Home</button>
+    <div id="scannedTextContainer" class="text-container">
+      <table id="scannedTextTable">
+          <!-- Table rows and cells will be inserted by JavaScript -->
+      </table>
+  </div>
     <canvas id="snapshotCanvas" hidden></canvas>
-    <button id="openCameraButton">Open Camera</button>
+    <img src="camera_icon.png" alt="Open Camera" id="openCameraButton" class="camera-button" />
     <video id="cameraStream" width="640" height="480" autoplay></video>
     <button id="takePictureButton">Take Picture</button>
     <canvas id="snapshotCanvas" width="640" height="480"></canvas>

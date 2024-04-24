@@ -9,6 +9,10 @@ function switchPage(pageNum) {
     if (pageNum === 1) {
         setupPage1();
     }
+    if (pageNum === 2) {
+        // Hide any game details that might be showing when going back to the game selection page
+        hideGameDetails();
+    }
 
     if (pageNum === 3) {
         initMap();  // Initialize the map when Page 3 is shown
@@ -48,22 +52,6 @@ function setupPage5() {
         console.error('Selected course details element not found on page 5');
     }
 }
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    setupStartGameButton();
-    initializeToggles();
-    const enterButton = document.getElementById('enterButton');
-    enterButton.addEventListener('click', function() {
-        const selectedCourse = JSON.parse(localStorage.getItem('selectedCourse')); // Retrieve the selected course from local storage
-        if (selectedCourse && map) {
-            const position = new google.maps.LatLng(selectedCourse.lat, selectedCourse.lng);
-            map.setCenter(position);
-            map.setZoom(13);
-        }
-    });
-    initMap(); // Initialize the map
-});
 
 
 function initializeToggles() {
@@ -122,6 +110,7 @@ function setupGameNameDisplay() {
 
 
 function showGameDetails(gameId) {
+
     const gameInfo = {
         1: '<div class="header-text-container"><h2>Classic</h2></div><p>This is your everyday golf battle...</p>',
         2: '<div class="header-text-container"><h2>Scramble</h2></div><p>Team up for a scramble...</p>',
@@ -143,6 +132,9 @@ function showGameDetails(gameId) {
     selectedGame = gameNames[gameId];
 
     const detailContainer = document.getElementById('detailsContent');
+    const backBtnHTML = '<img src="back_icon.png" alt="Back" class="back-button" onclick="switchPage(2)" />';
+
+    detailContainer.innerHTML = backBtnHTML + gameInfo[gameId];
     detailContainer.innerHTML = gameInfo[gameId];
     detailContainer.innerHTML += `
         <div class="toggle-switch">
@@ -242,8 +234,10 @@ async function initMap() {
             map.setCenter(userLocation);
             map.setZoom(10);
         }, () => {
-            console.error("Geolocation is not supported by this browser.");
+            console.error("Geolocation is not supported by this browser or access denied.");
         });
+    } else {
+        console.error("Geolocation is not supported by this browser.");
     }
     await loadCourses();
 }
@@ -266,26 +260,6 @@ function filterCourses() {
     });
     suggestionsDropdown.style.display = 'block';
 }
-
-
-// Add the logic to display the course details when the "Enter" button is pressed
-document.addEventListener('DOMContentLoaded', function() {
-    setupStartGameButton();
-    const enterButton = document.getElementById('enterButton');
-        if (enterButton) {
-            enterButton.addEventListener('click', function() {
-            if (selectedCourse && map) {
-            const position = new google.maps.LatLng(selectedCourse.lat, selectedCourse.lng);
-            map.setCenter(position);
-            map.setZoom(13);
-
-            // Display the course details without the latitude and longitude
-            displayCourseDetails(selectedCourse);
-            }
-        });
-    }
-    initMap();
-});
 
 function onCourseSelected(course) {
     if (course && map) {
@@ -326,99 +300,92 @@ function clearSearch() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    let stream = null; // Keep a reference to the stream globally in this scope.
-    const video = document.getElementById('cameraStream');
-    const canvas = document.getElementById('snapshotCanvas');
-    const context = canvas.getContext('2d');
-    const openCameraButton = document.getElementById('openCameraButton');
-    const takePictureButton = document.getElementById('takePictureButton');
+    switchPage(1);
+    setupStartGameButton();
+    initializeToggles();
+
+    // Ensure all elements are correctly referenced
+    let takePictureButton = document.getElementById('takePictureButton');
+    let video = document.getElementById('cameraStream');
+    let canvas = document.getElementById('snapshotCanvas');
+    let context = canvas.getContext('2d');
+    let openCameraButton = document.getElementById('openCameraButton');
+
+    const table = document.getElementById('scannedTextTable');
+    for (let i = 0; i < 11; i++) {
+        const row = table.insertRow();
+        for (let j = 0; j < 11; j++) {
+            row.insertCell().textContent = '\u00A0'; // Unicode for non-breaking space
+        }
+    }
+
+    const enterButton = document.getElementById('enterButton');
+        if (enterButton) {
+            enterButton.addEventListener('click', function() {
+            if (selectedCourse && map) {
+            const position = new google.maps.LatLng(selectedCourse.lat, selectedCourse.lng);
+            map.setCenter(position);
+            map.setZoom(13);
+
+            // Display the course details without the latitude and longitude
+            displayCourseDetails(selectedCourse);
+            }
+        });
+    }
+    initMap();
 
     if (openCameraButton) {
         openCameraButton.addEventListener('click', async () => {
-            console.log("Attempting to access camera...");
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                let stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 video.srcObject = stream;
                 video.play();
-                console.log("Camera is active...");
-                video.removeAttribute('hidden'); // Ensure video is visible
-                canvas.setAttribute('hidden', 'true'); // Hide the canvas initially
             } catch (error) {
                 console.error('Error accessing camera:', error);
             }
         });
-    } else {
-        console.error("Open Camera Button not found!");
     }
 
     if (takePictureButton) {
         takePictureButton.addEventListener('click', async () => {
-            if (stream) {
-                console.log("Taking picture...");
+            if (video.srcObject) {
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 video.pause();
-                stream.getTracks().forEach(track => track.stop()); // Stop the camera
-                stream = null; // Clear the stream
-    
-                video.setAttribute('hidden', 'true'); // Hide the video element
-                canvas.removeAttribute('hidden'); // Show the canvas with the picture
-    
-                // Get the image data from the canvas
-                const imageData = canvas.toDataURL('image/png').split(',')[1];
-    
-                try {
-                    // Send the image data to Google Cloud Vision API
-                    const apiKey = 'AIzaSyAPRZ4bppvwEn3IRwa7mABIGOJjZAEVrH0'; // Make sure to replace with your actual API key
-                    const visionApiUrl = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`;
-                    const response = await fetch(visionApiUrl, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            "requests": [
-                                {
-                                    "image": {
-                                        "content": imageData
-                                    },
-                                    "features": [
-                                        {
-                                            "type": "TEXT_DETECTION"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }),
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    });
-    
-                    if (!response.ok) {
-                        throw new Error(`Vision API Error: ${response.status}`);
-                    }
-    
-                    const result = await response.json();
-                    console.log("Vision API response received...");
-    
-                    // Extract text from the API response
+                video.srcObject.getTracks().forEach(track => track.stop()); // Stop the camera
+                let imageData = canvas.toDataURL('image/png').split(',')[1];
+
+                const visionApiUrl = `https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAPRZ4bppvwEn3IRwa7mABIGOJjZAEVrH0`;
+                const response = await fetch(visionApiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "requests": [{
+                            "image": { "content": imageData },
+                            "features": [{ "type": "TEXT_DETECTION" }]
+                        }]
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+                if (result.responses[0].fullTextAnnotation) {
                     const detectedText = result.responses[0].fullTextAnnotation.text;
-                    console.log(`Detected text: ${detectedText}`);
-    
-                    // Extract numbers from the detected text
-                    const detectedNumbers = detectedText.match(/\d+/g);
-                    if (detectedNumbers) {
-                        console.log(`Detected numbers: ${detectedNumbers.join(', ')}`);
-                    } else {
-                        console.log("No numbers detected.");
-                    }
-                } catch (error) {
-                    console.error('Error calling Google Cloud Vision API:', error);
+                    displayScannedText(detectedText); // Function to display text in the table
                 }
-    
-                console.log("Picture taken and camera stopped.");
             } else {
-                console.error("Camera stream not found!");
+                console.error("Camera stream not active.");
             }
         });
-    } else {
-        console.error("Take Picture Button not found!");
-    }    
+    }
 });
+
+function displayScannedText(text) {
+    const words = text.split(/\s+/);
+    let cells = document.querySelectorAll('#scannedTextTable td');
+    let index = 0;
+    cells.forEach(cell => {
+        cell.textContent = index < words.length ? words[index++] : '';
+    });
+}
+
+
+

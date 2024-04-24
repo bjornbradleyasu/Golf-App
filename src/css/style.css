@@ -22,11 +22,32 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center; /* This will center the text containers in the parent container */
 }
 
+/* Styling for the scanned text container */
 .text-container {
-  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
-  padding: 15px; /* Spacing around the text */
-  border-radius: 5px; /* Slightly rounded corners for the container */
-  margin-bottom: 15px; /* Add some margin to separate text containers if stacked */
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #f4f4f4; /* Light grey background for better visibility */
+  border: 1px solid #ccc; /* Slight border around the text container */
+  border-radius: 5px; /* Rounded corners for aesthetic */
+  font-size: 16px; /* Readable text size */
+  color: #333; /* Dark grey color for text */
+  overflow-y: auto; /* Allow vertical scrolling inside the container */
+  z-index: 5;
+  overflow-x: auto; /* Allows scrolling horizontally if the table is too wide */
+  margin-bottom: 20px;
+}
+
+#scannedTextTable {
+  width: 100%;
+  table-layout: fixed; /* Ensures equal column width */
+  border-collapse: collapse; /* Neat borders */
+}
+
+#scannedTextTable td {
+  border: 1px solid #ccc;
+  height: 100%; /* Ensures cells are visible */
+  text-align: center;
+  vertical-align: middle;
 }
 
 
@@ -84,6 +105,37 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 50px; 
   border-radius: 20px;
   /* Other styles... */
+}
+
+/* Apply this style to all back buttons across all pages */
+.back-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 50px; /* Set the width of the icon */
+  cursor: pointer;
+  z-index: 10; /* Ensure the button is above other elements */
+}
+
+.camera-button {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  cursor: pointer;
+  width: 100px; /* Or whatever size you prefer */
+  height: auto; /* Maintain aspect ratio */
+  z-index: 1000;
+}
+
+#cameraStream, #snapshotCanvas {
+  max-width: 100%; /* Limits the width to the parent container's width */
+  display: block; /* Aligns the camera below the table */
+  height: auto; /* Keeps the aspect ratio intact */
+  margin-top: 20px; /* Adds space between the table and the camera */
+}
+
+.page:not(#page1) .back-button {
+  display: block;
 }
 
 .active {
